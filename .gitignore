@@ -34,6 +34,7 @@ dist/
 
 # Local planning notes
 IMPLEMENTATION_PLAN.md
+CODING_RULES.MD
 
 # Generated experiment outputs and downloaded data
 artifacts/
