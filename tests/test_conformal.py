@@ -2,7 +2,11 @@ import math
 
 import numpy as np
 
-from conformal_selective_prediction import conformal_quantile, lac_scores
+from conformal_selective_prediction import (
+    conformal_quantile,
+    lac_prediction_sets,
+    lac_scores,
+)
 
 
 def test_conformal_quantile_uses_finite_sample_rank() -> None:
@@ -35,3 +39,22 @@ def test_lac_scores_use_the_true_class_probabilities() -> None:
 
     expected_scores = np.array([0.3, 0.4, 0.5])
     np.testing.assert_allclose(scores, expected_scores)
+
+
+def test_lac_prediction_sets_include_scores_at_the_threshold() -> None:
+    probabilities = np.array(
+        [
+            [0.75, 0.50, 0.25],
+            [0.625, 0.375, 0.00],
+        ]
+    )
+
+    prediction_sets = lac_prediction_sets(probabilities, threshold=0.5)
+
+    expected_sets = np.array(
+        [
+            [True, True, False],
+            [True, False, False],
+        ]
+    )
+    np.testing.assert_array_equal(prediction_sets, expected_sets)
