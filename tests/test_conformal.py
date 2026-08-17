@@ -3,7 +3,9 @@ import math
 import numpy as np
 
 from conformal_selective_prediction import (
+    average_set_size,
     conformal_quantile,
+    empirical_coverage,
     lac_prediction_sets,
     lac_scores,
 )
@@ -58,3 +60,21 @@ def test_lac_prediction_sets_include_scores_at_the_threshold() -> None:
         ]
     )
     np.testing.assert_array_equal(prediction_sets, expected_sets)
+
+
+def test_prediction_set_metrics_measure_coverage_and_size() -> None:
+    prediction_sets = np.array(
+        [
+            [True, False, False],
+            [False, True, True],
+            [False, False, True],
+            [True, False, True],
+        ]
+    )
+    labels = np.array([0, 0, 2, 1])
+
+    coverage = empirical_coverage(prediction_sets, labels)
+    average_size = average_set_size(prediction_sets)
+
+    assert coverage == 0.5
+    assert average_size == 1.5
