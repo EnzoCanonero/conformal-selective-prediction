@@ -1,5 +1,7 @@
 # Conformal Selective Prediction
 
+[![Tests](https://github.com/EnzoCanonero/conformal-selective-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/EnzoCanonero/conformal-selective-prediction/actions/workflows/ci.yml)
+
 This repository develops a conformal selective-prediction layer for reliable
 automation. Instead of forcing a model to act on every input, it produces
 prediction sets with coverage guarantees and defers uncertain cases to human
@@ -50,6 +52,13 @@ Run the complete training, calibration, and evaluation workflow with:
 python examples/synthetic_multiclass.py
 ```
 
+Using the fixed seed and a 4,000/2,000/2,000 train/calibration/test split, the
+example produces:
+
+| Target coverage | Empirical coverage | Average set size |
+|----------------:|-------------------:|-----------------:|
+| 0.900           | 0.908              | 1.155            |
+
 The example reports the target coverage, empirical test coverage, and average
 prediction-set size. A single finite test set can fall slightly above or below
 the target because the conformal guarantee is marginal rather than a
@@ -61,3 +70,7 @@ The intended split-conformal guarantee is finite-sample **marginal coverage**.
 It relies on exchangeability of the calibration examples and future examples.
 The guarantee does not automatically imply conditional coverage for every
 subgroup, or a bound on the error rate among cases selected for automation.
+
+## License
+
+This project is available under the [MIT License](LICENSE).
