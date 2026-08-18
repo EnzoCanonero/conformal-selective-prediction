@@ -12,17 +12,13 @@ operational risk.
 
 ## Current status
 
-The project is at its initial packaging milestone. The Python package uses a
-`src` layout, with NumPy as the only core dependency. The first implementation
-milestone will add a reusable multiclass split-conformal core based on least
-ambiguous class (LAC) scores.
+The reusable multiclass split-conformal core now includes LAC scores,
+finite-sample calibration, prediction-set construction, and basic set-quality
+metrics. A synthetic IID multiclass example exercises the complete workflow and
+checks its marginal coverage.
 
-Planned work includes:
-
-1. LAC nonconformity scores and finite-sample split-conformal calibration.
-2. Prediction-set construction and basic set-quality metrics.
-3. A synthetic IID multiclass example and tests of marginal coverage.
-4. BANKING77, LLM and distribution-shift experiments in later milestones.
+The next milestones will introduce the automation and deferral policy, then
+apply it to BANKING77 before moving to LLM and distribution-shift experiments.
 
 ## Installation
 
@@ -45,6 +41,19 @@ core package:
 ```bash
 python -m pip install -e ".[example]"
 ```
+
+## Synthetic IID example
+
+Run the complete training, calibration, and evaluation workflow with:
+
+```bash
+python examples/synthetic_multiclass.py
+```
+
+The example reports the target coverage, empirical test coverage, and average
+prediction-set size. A single finite test set can fall slightly above or below
+the target because the conformal guarantee is marginal rather than a
+deterministic lower bound for every realized test set.
 
 ## Statistical scope
 
