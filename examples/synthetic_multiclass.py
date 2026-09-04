@@ -5,11 +5,14 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from conformal_selective_prediction import (
+    automated_error_rate,
+    automation_rate,
     average_set_size,
     conformal_quantile,
     empirical_coverage,
     lac_prediction_sets,
     lac_scores,
+    singleton_mask,
 )
 
 
@@ -18,7 +21,7 @@ MIS_COVERAGE_RATE = 0.1
 
 
 # Run a synthetic IID dataset through the complete LAC workflow.
-def run_experiment() -> tuple[float, float]:
+def run_experiment() -> tuple[float, float, float, float]:
     features, labels = make_classification(
         n_samples=8_000,
         n_features=20,
@@ -74,16 +77,34 @@ def run_experiment() -> tuple[float, float]:
     coverage = empirical_coverage(prediction_sets, test_labels)
     mean_set_size = average_set_size(prediction_sets)
 
-    return coverage, mean_set_size
+    predicted_class_indices = test_probabilities.argmax(axis=1)
+    test_predictions = classifier.classes_[predicted_class_indices]
+    automation_mask = singleton_mask(prediction_sets)
+
+    automated_fraction = automation_rate(automation_mask)
+    automated_error = automated_error_rate(
+        test_predictions,
+        test_labels,
+        automation_mask,
+    )
+
+    return coverage, mean_set_size, automated_fraction, automated_error
 
 
 def main() -> None:
     target_coverage = 1.0 - MIS_COVERAGE_RATE
-    coverage, mean_set_size = run_experiment()
+    (
+        coverage,
+        mean_set_size,
+        automated_fraction,
+        automated_error,
+    ) = run_experiment()
 
     print(f"Target coverage: {target_coverage:.3f}")
     print(f"Empirical coverage: {coverage:.3f}")
     print(f"Average set size: {mean_set_size:.3f}")
+    print(f"Automation rate: {automated_fraction:.3f}")
+    print(f"Automated-case error rate: {automated_error:.3f}")
 
 
 if __name__ == "__main__":
