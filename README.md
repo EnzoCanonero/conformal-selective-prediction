@@ -16,11 +16,12 @@ operational risk.
 
 The reusable multiclass split-conformal core now includes LAC scores,
 finite-sample calibration, prediction-set construction, and basic set-quality
-metrics. A synthetic IID multiclass example exercises the complete workflow and
-checks its marginal coverage.
+metrics. Its singleton policy automates one-class prediction sets and defers all
+other cases. A synthetic IID multiclass example exercises the complete workflow
+and measures both marginal coverage and the automation-versus-error trade-off.
 
-The next milestones will introduce the automation and deferral policy, then
-apply it to BANKING77 before moving to LLM and distribution-shift experiments.
+The next milestone will apply this decision layer to BANKING77 before moving to
+LLM and distribution-shift experiments.
 
 ## Installation
 
@@ -55,14 +56,14 @@ python examples/synthetic_multiclass.py
 Using the fixed seed and a 4,000/2,000/2,000 train/calibration/test split, the
 example produces:
 
-| Target coverage | Empirical coverage | Average set size |
-|----------------:|-------------------:|-----------------:|
-| 0.900           | 0.908              | 1.155            |
+| Target coverage | Empirical coverage | Average set size | Automation rate | Automated-case error |
+|----------------:|-------------------:|-----------------:|----------------:|---------------------:|
+| 0.900           | 0.908              | 1.155            | 0.845           | 0.101                |
 
-The example reports the target coverage, empirical test coverage, and average
-prediction-set size. A single finite test set can fall slightly above or below
-the target because the conformal guarantee is marginal rather than a
-deterministic lower bound for every realized test set.
+A single finite test set can fall slightly above or below the coverage target
+because the conformal guarantee is marginal rather than a deterministic lower
+bound for every realized test set. The automated-case error is measured only
+among singleton predictions and is not controlled by that marginal guarantee.
 
 ## Statistical scope
 
